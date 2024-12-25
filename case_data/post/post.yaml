@@ -1,0 +1,27 @@
+summary:
+  project: 饼盒App
+  module: 帖子模块
+
+auth_login_01:
+  hosts: 127.0.0.1:8080, 127.0.0.2:8080
+  url: '/login'
+  method: GET
+  params:
+    page_num: 1
+    limit: 1
+  headers:
+  data:
+  needValidation:
+  description:
+
+auth_login_02:
+  hosts: 127.0.0.1:8080
+  url: '/login'
+  method: POST
+  params:
+  headers:
+  data:
+  needValidation:
+  description:
+
+

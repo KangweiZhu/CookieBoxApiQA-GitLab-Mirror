@@ -1,0 +1,5 @@
+# 被测项目名称
+project_name: 饼盒APP
+
+# 被测项目ip+端口，使用逗号隔开，支持多ip
+project_host: 127.0.0.1:8080

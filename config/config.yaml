@@ -1,0 +1,6 @@
+# 选择启用的config
+active_config: devenv
+
+project_name: 会被替换
+
+not_contain: 会被继承
