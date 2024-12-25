@@ -6,7 +6,7 @@
 
     @Modify Time      @Author               @Version 
     ------------      -------------------   -------- 
-    12/20/24 12:16   Anicaa (Kangwei Zhu)  1.0      
+    12/20/24 12:16    Anicaa (Kangwei Zhu)  1.0
 """
 import json
 from os import DirEntry
