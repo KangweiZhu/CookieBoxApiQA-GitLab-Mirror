@@ -15,15 +15,16 @@ from dataclasses import dataclass
 @dataclass
 class ApiTestCase:
 
-    def __init__(self, project: str, module: str, identifier: str, hosts: list[str], method: str, url: str,
+    def __init__(self, project: str, module: str, identifier: str, protocol: str, host: str, method: str, api: str,
                  params: dict[any, any], headers: dict[any, any],
                  data: dict[any, any], description: str):
         self.project = project
         self.module = module
         self.identifier = identifier
-        self.hosts = hosts
+        self.protocol = protocol
+        self.host = host
         self.method = method
-        self.url = url
+        self.api = api
         self.params = params
         self.headers = headers
         self.data = data
@@ -34,9 +35,10 @@ class ApiTestCase:
             "Project": self.project,
             "Module": self.module,
             "Identifier": self.identifier,
-            "Hosts": self.hosts,
+            "Protocol": self.protocol,
+            "Host": self.host,
             "Method": self.method,
-            "URL": self.url,
+            "Api": self.api,
             "Params": self.params,
             "Headers": self.headers,
             "Data": self.data,
@@ -45,7 +47,7 @@ class ApiTestCase:
 
     def __str__(self):
         return (f"ApiTestCase(Project: {self.project}, Module: {self.module}, Identifier: {self.identifier}, "
-                f"Hosts: {self.hosts}, Method: {self.method}, URL: {self.url}, "
+                f"Protocol: {self.protocol}, Host: {self.host}, Method: {self.method}, Api: {self.api}, "
                 f"Params: {self.params}, Headers: {self.headers}, Data: {self.data}, "
                 f"Description: {self.description})")
 

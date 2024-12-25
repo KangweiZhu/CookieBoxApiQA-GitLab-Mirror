@@ -71,6 +71,13 @@ class YamlUtil:
                 raise YamlSummaryMissingException(yaml_filepath)
             return module
 
+        def get_protocol(case_data, **kwargs) -> str:
+            protocol = case_data.get('protocol')
+            if protocol is None:
+                kwargs['field'] = 'protocol'
+                raise YamlDataFieldMissingException(**kwargs)
+            return protocol
+
         def get_host(case_data, **kwargs) -> list[str]:
             hosts = case_data.get('hosts')
             if hosts is None:
@@ -79,18 +86,18 @@ class YamlUtil:
             return [ip.strip() for ip in hosts.split(',')]
 
         def get_method(case_data, **kwargs) -> str:
-            method = case_data.get('method')
+            method: str = case_data.get('method')
             if method is None:
                 kwargs['field'] = 'method'
                 raise YamlDataFieldMissingException(**kwargs)
-            return method.strip()
+            return method.strip().upper()
 
-        def get_url(case_data, **kwargs) -> str:
-            url = case_data.get('url')
-            if url is None:
-                kwargs['field'] = 'url'
+        def get_api(case_data, **kwargs) -> str:
+            api = case_data.get('api')
+            if api is None:
+                kwargs['field'] = 'api'
                 raise YamlDataFieldMissingException(**kwargs)
-            return url.strip()
+            return api.strip()
 
         def get_params(case_data) -> dict[any, any]:
             params = case_data.get('params')
@@ -118,19 +125,25 @@ class YamlUtil:
                 identifier = key
                 case_data = raw_data[key]
                 exception_message_fields['identifier'] = identifier
-                testcase = ApiTestCase(
-                    project=project,
-                    module=module,
-                    identifier=identifier,
-                    hosts=get_host(case_data, **exception_message_fields),
-                    method=get_method(case_data, **exception_message_fields),
-                    url=get_url(case_data, **exception_message_fields),
-                    params=get_params(case_data),
-                    headers=get_headers(case_data),
-                    data=get_data(case_data),
-                    description=get_description(case_data)
-                )
-                testcase_container[project][module][identifier] = testcase
+                hosts = get_host(case_data, **exception_message_fields)
+                num_hosts = len(hosts)
+                for host in hosts:
+                    identifier = f'{identifier}-{host}' if num_hosts > 1 else identifier
+                    testcase = ApiTestCase(
+                        project=project,
+                        module=module,
+                        identifier=identifier,
+                        protocol=get_protocol(case_data, **exception_message_fields),
+                        host=host,
+                        method=get_method(case_data, **exception_message_fields),
+                        api=get_api(case_data, **exception_message_fields),
+                        params=get_params(case_data),
+                        headers=get_headers(case_data),
+                        data=get_data(case_data),
+                        description=get_description(case_data)
+                    )
+                    testcase_container[project][module][identifier] = testcase
+                    identifier = key
         return testcase_container
 
     @staticmethod

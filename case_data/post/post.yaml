@@ -3,9 +3,10 @@ summary:
   module: 帖子模块
 
 auth_login_01:
-  hosts: 127.0.0.1:8080, 127.0.0.2:8080
-  url: '/login'
-  method: GET
+  protocol: https
+  hosts: 127.0.0.1:8080, 127.0.0.1:8080
+  api: /login
+  method: gET
   params:
     page_num: 1
     limit: 1
@@ -15,8 +16,9 @@ auth_login_01:
   description:
 
 auth_login_02:
+  protocol: http
   hosts: 127.0.0.1:8080
-  url: '/login'
+  api: /login
   method: POST
   params:
   headers:

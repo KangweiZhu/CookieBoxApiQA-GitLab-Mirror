@@ -37,6 +37,7 @@ for yaml_file_entry in yaml_file_entries:
                                 testcase_bus[project][module][identifier] = apitestcase
 
 testcase_bus_json = json.dumps(testcase_bus, indent=4, ensure_ascii=False, default=default_serializer)
+print(testcase_bus_json)
 
 # 只导出这两个
 __all__ = ['testcase_bus', 'testcase_bus_json']

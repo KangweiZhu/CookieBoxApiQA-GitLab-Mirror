@@ -11,13 +11,10 @@
 import pytest
 
 from case_script import testcase_bus
+from utils.request.http_util import HttpUtil
 
-# identifiers = list(testcase_bus['饼盒App']['登陆模块'].keys())
 project_name = '饼盒App'
 module_name = '登陆模块'
-# identifiers = [identifier for identifier in testcase_bus[project_name][module_name]]
-# cases = [testcase_bus[project_name][module_name][identifier_name] for identifier_name in identifiers]
-
 
 def load_identifier(project_name, module_name):
     identifiers = list(testcase_bus[project_name][module_name].keys())
@@ -29,6 +26,9 @@ def load_test_case(project_name, module_name):
 
 class TestLogin:
 
-    @pytest.mark.parametrize(argnames="test_case", argvalues=load_test_case(project_name, module_name), ids=load_identifier(project_name, module_name))
-    def test_login(self, test_case):
-        pass
+    @pytest.mark.parametrize(argnames="apitestcase", argvalues=load_test_case(project_name, module_name), ids=load_identifier(project_name, module_name))
+    def test_login(self, apitestcase):
+        resp = HttpUtil(apitestcase).send_request()
+        print(f'\n{resp}')
+        print(resp.text)
+
