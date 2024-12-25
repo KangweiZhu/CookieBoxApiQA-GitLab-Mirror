@@ -35,5 +35,8 @@ for yaml_file_entry in yaml_file_entries:
                         for identifier, apitestcase in identifiers.items():
                             if identifier not in testcase_bus[project][module]:
                                 testcase_bus[project][module][identifier] = apitestcase
-print(json.dumps(testcase_bus, indent=4, ensure_ascii=False, default=default_serializer))
-print(testcase_bus)
+
+testcase_bus_json = json.dumps(testcase_bus, indent=4, ensure_ascii=False, default=default_serializer)
+
+# 只导出这两个
+__all__ = ['testcase_bus', 'testcase_bus_json']

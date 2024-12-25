@@ -8,8 +8,6 @@
     ------------      -------------------   --------
     12/20/24 08:09    Anicaa (Kangwei Zhu)  1.0
 """
-import os.path
-
 from utils.file.yaml_util import YamlUtil
 from utils.misc.path_exporter import config_dir
 
