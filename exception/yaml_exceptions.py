@@ -8,6 +8,7 @@
     ------------      -------------------   -------- 
     12/24/24 05:28    Anicaa (Kangwei Zhu)  1.0
 """
+from pyexpat.errors import messages
 
 
 def generate_data_field_incorrect_message(**kwargs):
@@ -17,6 +18,8 @@ def generate_data_field_incorrect_message(**kwargs):
 def generate_data_field_missing_message(**kwargs):
     return '[{project}][{module}]异常，原因: 测试用例[{identifier}]的{field}属性不能为空'.format(**kwargs)
 
+def generate_context_range_missing_message(**kwargs):
+    return '[{project}][{module}]异常，原因: 测试用例[{identifier}]的第{count}个{field}属性不存在，而这个属性被要求必须存在。'.format(**kwargs)
 
 def generate_summary_missing_message(yaml_filepath: str):
     return f'[{yaml_filepath}]文件summary部分异常，请检查summary是否存在，并补全项目名和模块名'

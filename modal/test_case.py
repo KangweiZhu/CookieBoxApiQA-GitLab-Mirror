@@ -17,7 +17,7 @@ class ApiTestCase:
 
     def __init__(self, project: str, module: str, identifier: str, protocol: str, host: str, method: str, api: str,
                  params: dict[any, any], headers: dict[any, any],
-                 data: dict[any, any], description: str):
+                 data: dict[any, any], context: dict[any, dict[any, dict[any, any]]], description: str):
         self.project = project
         self.module = module
         self.identifier = identifier
@@ -28,6 +28,7 @@ class ApiTestCase:
         self.params = params
         self.headers = headers
         self.data = data
+        self.context = context
         self.description = description
 
     def beautifier(self) -> dict:
@@ -42,6 +43,7 @@ class ApiTestCase:
             "Params": self.params,
             "Headers": self.headers,
             "Data": self.data,
+            "context": self.context,
             "Description": self.description
         }
 
@@ -49,7 +51,7 @@ class ApiTestCase:
         return (f"ApiTestCase(Project: {self.project}, Module: {self.module}, Identifier: {self.identifier}, "
                 f"Protocol: {self.protocol}, Host: {self.host}, Method: {self.method}, Api: {self.api}, "
                 f"Params: {self.params}, Headers: {self.headers}, Data: {self.data}, "
-                f"Description: {self.description})")
+                f"context: {self.context}, Description: {self.description})")
 
     def __repr__(self):
         return str(self.beautifier())

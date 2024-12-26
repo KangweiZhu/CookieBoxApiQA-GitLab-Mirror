@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-    @File    :   CookieBoxApiQA.py.py   
+    @File    :   cookie_box_api_qa.py.py
     @Contact :   anicaazhu@gmail.com kangwei2@illinois.edu
     @Description: 
 
@@ -8,16 +8,15 @@
     ------------      -------------------   -------- 
     12/25/24 15:25    Anicaa (Kangwei Zhu)  1.0      
 """
-import json
 
 import pytest
-import requests
-
 
 def run():
     pytest.main()
 
+
 if __name__ == '__main__':
+    cache = {}
     run()
 
     # request_url = 'http://127.0.0.1:8080/api/auth/login'

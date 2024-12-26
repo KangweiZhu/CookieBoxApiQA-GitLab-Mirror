@@ -16,6 +16,12 @@ auth_login_01:
     username: bakahentai
     password: bakahentai
   needValidation:
+  context:
+    response:
+      global:
+        token: $.data.token
+      module:
+        username: $.data.userVO.username
   description:
 
 auth_login_02:
@@ -27,6 +33,7 @@ auth_login_02:
   headers:
   data:
   needValidation:
+  context:
   description:
 
 

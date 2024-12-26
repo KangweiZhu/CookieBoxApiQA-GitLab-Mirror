@@ -111,6 +111,26 @@ class YamlUtil:
             data = case_data.get('data')
             return data
 
+        def get_context(case_data, **kwargs) -> dict[str, dict[str, dict[any, any]]]:
+            """
+
+            :param case_data:
+            :param kwargs:
+            :return: {context_type: {context_scope: {name: value}}}
+            """
+            context = case_data.get('context')
+            # if context:
+            #     count = 1
+            #     for kvs in context:
+            #         range_value = kvs.get('range')
+            #         if range_value is None:
+            #             kwargs['field'] = 'context-range'
+            #             kwargs['count'] = count
+            #             raise YamlDataFieldMissingException(**kwargs)
+            #         else:
+            #             count += 1
+            return context
+
         def get_description(case_data) -> any:
             description = case_data.get('description')
             return description
@@ -140,6 +160,7 @@ class YamlUtil:
                         params=get_params(case_data),
                         headers=get_headers(case_data),
                         data=get_data(case_data),
+                        context=get_context(case_data, **exception_message_fields),
                         description=get_description(case_data)
                     )
                     testcase_container[project][module][identifier] = testcase

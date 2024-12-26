@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-    @File    :   http_util.py   
+    @File    :   http_request_util.py
     @Contact :   anicaazhu@gmail.com kangwei2@illinois.edu
     @Description: 
 
@@ -13,11 +13,10 @@ import json
 import requests
 
 from modal.test_case import ApiTestCase
+from utils.request.base_request_util import BaseRequestUtil, protocol_formatter
 
-def protocol_formatter(protocol) -> str:
-    return protocol + "://"
 
-class HttpUtil:
+class HttpRequestUtil(BaseRequestUtil):
 
     def __init__(self, apitestcase: ApiTestCase):
         self.__apitestcase = apitestcase
