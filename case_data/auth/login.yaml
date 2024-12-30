@@ -15,7 +15,6 @@ auth_login_01:
   data:
     username: bakahentai
     password: bakahentai
-  needValidation:
   context:
     response:
       global:
@@ -32,7 +31,6 @@ auth_login_02:
   params:
   headers:
   data:
-  needValidation:
   context:
   description:
 

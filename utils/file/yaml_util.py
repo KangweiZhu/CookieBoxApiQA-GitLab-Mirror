@@ -119,16 +119,6 @@ class YamlUtil:
             :return: {context_type: {context_scope: {name: value}}}
             """
             context = case_data.get('context')
-            # if context:
-            #     count = 1
-            #     for kvs in context:
-            #         range_value = kvs.get('range')
-            #         if range_value is None:
-            #             kwargs['field'] = 'context-range'
-            #             kwargs['count'] = count
-            #             raise YamlDataFieldMissingException(**kwargs)
-            #         else:
-            #             count += 1
             return context
 
         def get_description(case_data) -> any:

@@ -2,30 +2,20 @@ summary:
   project: 饼盒App
   module: 帖子模块
 
-auth_login_01:
+# 需要登陆，携带token才能够查询post. 可以通过context来拿到token
+post_query_01:
   protocol: https
   hosts: 127.0.0.1:8080, 127.0.0.1:8080
-  api: /login
-  method: gET
+  api: /api/posts
+  method:  gET
   params:
-    page_num: 1
-    limit: 1
+    postId: 1
   headers:
+    Authorization: Bearer {$ response.global.token} qqq {$ data.qq}
   data:
   needValidation:
   context:
   description:
 
-auth_login_02:
-  protocol: http
-  hosts: 127.0.0.1:8080
-  api: /login
-  method: POST
-  params:
-  headers:
-  data:
-  needValidation:
-  context:
-  description:
 
 

@@ -10,30 +10,22 @@
 """
 import json
 
-import jsonpath
 import pytest
 
-from case_script import testcase_bus
 from context.response_context import context
 from modal.test_case import ApiTestCase
-from utils.request.http_request_util import HttpRequestUtil
+from utils.case.gen_util import load_test_case, load_identifier
+from utils.request.http_request import HttpRequest
 
 project_name = '饼盒App'
 module_name = '登陆模块'
 
-def load_identifier(project_name, module_name):
-    identifiers = list(testcase_bus[project_name][module_name].keys())
-    return identifiers
-
-def load_test_case(project_name, module_name):
-    cases = list(testcase_bus[project_name][module_name].values())
-    return cases
-
 class TestLogin:
 
-    @pytest.mark.parametrize(argnames="apitestcase", argvalues=load_test_case(project_name, module_name), ids=load_identifier(project_name, module_name))
-    def test_login(self, apitestcase: ApiTestCase):
-        resp = HttpRequestUtil(apitestcase).send_request()
-        HttpRequestUtil.teardown_request(resp, apitestcase)
+    @pytest.mark.parametrize(argnames="api_test_case", argvalues=load_test_case(project_name, module_name), ids=load_identifier(project_name, module_name))
+    def test_login(self, api_test_case: ApiTestCase):
+        http_request = HttpRequest(api_test_case)
+        resp = http_request.send_request()
+        http_request.teardown_request(resp)
         print(json.dumps(context, indent=4, ensure_ascii=False))
 
