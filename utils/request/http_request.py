@@ -15,24 +15,30 @@ from typing import Optional
 import requests
 
 from context.response_context import context
-from utils.request.base_request import BaseRequest, protocol_formatter
+from utils.request.base_request import BaseRequest, url_formatter
+
 
 class HttpRequest(BaseRequest):
 
     def send_request(self) -> Optional[requests.Response]:
         apitestcase = self.apitestcase
-        request_url = protocol_formatter(apitestcase.protocol) + apitestcase.host + apitestcase.api
-        print(self.sanitize_headers(context, apitestcase.headers))
+        request_url = url_formatter(
+            **{
+                'protocol': apitestcase.protocol,
+                'host': apitestcase.host,
+                'api': apitestcase.api
+            }
+        )
         try:
             logging.info(f"Sending {apitestcase.method} request to {request_url}")
-
+            print(request_url)
             resp = requests.request(
                 method=apitestcase.method,
                 url=request_url,
                 headers=self.sanitize_headers(context, apitestcase.headers),
                 params=apitestcase.params,
                 data=json.dumps(apitestcase.data),
-                timeout=5
+                timeout=5,
             )
 
             resp.raise_for_status()
@@ -46,4 +52,3 @@ class HttpRequest(BaseRequest):
             logging.error(f"Unexpected error during request: {e}")
 
         return None
-

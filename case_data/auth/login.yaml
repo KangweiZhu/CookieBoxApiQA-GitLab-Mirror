@@ -7,6 +7,7 @@ auth_login_01:
   hosts: 127.0.0.1:8080, 127.0.0.1:8080
   api: /api/auth/login
   method: POST
+  pathVariables:
   params:
     page_num: 1
     limit: 1
@@ -28,6 +29,7 @@ auth_login_02:
   hosts: 127.0.0.1:8080
   api: /login
   method: POST
+  pathVariables:
   params:
   headers:
   data:

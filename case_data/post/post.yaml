@@ -4,15 +4,14 @@ summary:
 
 # 需要登陆，携带token才能够查询post. 可以通过context来拿到token
 post_query_01:
-  protocol: https
+  protocol: http
   hosts: 127.0.0.1:8080, 127.0.0.1:8080
-  api: /api/posts
+  api: /api/posts/1
   method:  gET
+  pathVariables:
   params:
-    postId: 1
   headers:
-    Authorization: Bearer {$ response.global.token} qqq {$ data.qq}
-  data:
+    Authorization: Bearer {$.response.global.token}
   needValidation:
   context:
   description:

@@ -28,5 +28,5 @@ class TestPost:
         resp = http_request.send_request()
         http_request.teardown_request(resp)
         print(resp)
-        #print(json.dumps(context, indent=4, ensure_ascii=False))
+        print(json.dumps(context, indent=4, ensure_ascii=False))
 

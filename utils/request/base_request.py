@@ -8,10 +8,11 @@ from jsonpath import jsonpath
 from modal.test_case import ApiTestCase
 from utils.context.context_util import ContextUtil
 from context.response_context import context
+from utils.misc.string_util import StringUtil
 
 
-def protocol_formatter(protocol: str) -> str:
-    return f"{protocol}://"
+def url_formatter(**kwargs) -> str:
+    return "{protocol}://{host}{api}".format(**kwargs)
 
 class BaseRequest:
 
@@ -45,7 +46,8 @@ class BaseRequest:
                 for scope, attributes in context_scopes.items():
                     context[context_type].setdefault(scope, {})
                     for name, value in attributes.items():
-                        extracted_value = jsonpath(json_resp, value)
+                        extracted_value = ContextUtil.get_value_from_jsonpath(json_resp, value)
+                        print(f"value is {value}")
                         if extracted_value:
                             context[context_type][scope][name] = extracted_value
         except json.JSONDecodeError as e:
