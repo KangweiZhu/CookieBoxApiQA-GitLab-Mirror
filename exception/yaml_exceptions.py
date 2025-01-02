@@ -35,14 +35,6 @@ def generate_jsonpath_str_parsing_message(str_w_jsonpath):
     return f'这条带有jsonpath的属性解析失败了: {str_w_jsonpath}'
 
 
-"""
-a = 3
-b = 1
-if a == b:
-    raise YamlDataFieldIncorrectException(project='饼盒项目', module='用户登陆鉴权模块', identifier='auth_login_01', field='data')
-"""
-
-
 class YamlDataFieldIncorrectException(BaseException):
 
     def __init__(self, **kwargs):
@@ -69,6 +61,7 @@ class YamlJsonpathIncorrectException(BaseException):
     def __init__(self, json_path: str):
         message = generate_jsonpath_incorrect_message(json_path)
         super().__init__(message)
+
 
 class YamlJsonpathStrParsingException(BaseException):
 

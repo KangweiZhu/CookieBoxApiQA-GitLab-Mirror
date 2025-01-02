@@ -16,5 +16,16 @@ post_query_01:
   context:
   description:
 
-
+post_query_02:
+  protocol: http
+  hosts: 127.0.0.1:8080, 127.0.0.1:8080
+  api: /api/posts/2
+  method:  gET
+  pathVariables:
+  params:
+  headers:
+    Authorization: Bearer {$.response.global.token}
+  needValidation:
+  context:
+  description:
 

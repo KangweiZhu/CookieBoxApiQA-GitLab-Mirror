@@ -12,7 +12,7 @@ import json
 from os import DirEntry
 
 from utils.file.yaml_util import YamlUtil
-from utils.misc.json_util import default_serializer
+from utils.misc.json_util import JsonUtil
 from utils.misc.path_exporter import data_dir
 
 # Retrieve all the yaml files under a given directory
@@ -36,7 +36,7 @@ for yaml_file_entry in yaml_file_entries:
                             if identifier not in testcase_bus[project][module]:
                                 testcase_bus[project][module][identifier] = apitestcase
 
-testcase_bus_json = json.dumps(testcase_bus, indent=4, ensure_ascii=False, default=default_serializer)
+testcase_bus_json = json.dumps(testcase_bus, indent=4, ensure_ascii=False, default=JsonUtil.default_serializer)
 # print(testcase_bus_json)
 
 # 只导出这两个

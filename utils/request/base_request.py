@@ -19,15 +19,15 @@ class BaseRequest:
     def __init__(self, apitestcase: ApiTestCase):
         self.apitestcase = apitestcase
 
-    def sanitize_headers(self, context: Dict[str, Any], header: Optional[Dict[str, str]]) -> Optional[Dict[str, str]]:
-        if not header or not context:
-            return header
+    def sanitize_data_fields(self, context: Dict[str, Any], field: Optional[Dict[str, str]]) -> Optional[Dict[str, str]]:
+        if not field or not context:
+            return field
 
-        for key, path in header.items():
+        for key, path in field.items():
             value = ContextUtil.get_value_from_jsonpath(context, path)
             if value:
-                header[key] = value
-        return header
+                field[key] = value
+        return field
 
     def teardown_request(self, resp: requests.Response):
         apitestcase = self.apitestcase
@@ -47,7 +47,6 @@ class BaseRequest:
                     context[context_type].setdefault(scope, {})
                     for name, value in attributes.items():
                         extracted_value = ContextUtil.get_value_from_jsonpath(json_resp, value)
-                        print(f"value is {value}")
                         if extracted_value:
                             context[context_type][scope][name] = extracted_value
         except json.JSONDecodeError as e:

@@ -8,14 +8,13 @@
     ------------      -------------------   -------- 
     12/25/24 21:25    Anicaa (Kangwei Zhu)  1.0      
 """
-import json
+from collections import defaultdict
 
-import requests
 from jsonpath import jsonpath
 
-from utils.file.yaml_util import YamlUtil
-from utils.misc.path_exporter import data_dir
+from utils.misc.dict_util import DictUtil
 
+# playground 1: Test sending request
 # request_url = 'http://127.0.0.1:8080/api/auth/login'
 # resp = requests.request(
 #     method='POST',
@@ -32,3 +31,49 @@ from utils.misc.path_exporter import data_dir
 # print(jsonpathdata)
 # yaml_file = YamlUtil.read_yaml_data(data_dir + '/aaa.yaml')
 # print(yaml_file)
+
+# playground 2: test our json yaml parser
+#
+# Bearer {$.{$config.range}.data.token} aaaa
+#
+# encountered } => $config.range is jsonpath? => get from context => $config.range = global
+#
+# pop from stack,  $.global.data.token => eWqweqeio1p23123mq
+# stringbuilder.append a a a a
+# if string is not empty:
+#     Bearer eWqweqeio1p23123mq a a a a
+
+class JsonpathMismatchException(Exception):
+    def __init__(self, **kwargs):
+        super().__init__('测试用例{identifier}中的{key}字段在解析jsonpath时出现异常'.format(**kwargs))
+
+jsonobj = defaultdict(DictUtil.dict_recursive_init)
+jsonobj['config']['range'] = 'global'
+jsonobj['global']['data']['token'] = 'abcd'
+expectedResult = 'Bearer abcd'
+s = 'Bearer {$.{$.config.range}.data.token}'
+stack = []
+stringbuilder = ''
+if s == '':
+     print('')
+for ch in s:
+    #print(stringbuilder, stack)
+
+    if ch == '{':
+        stack.append(stringbuilder)
+        stringbuilder = ''
+    elif ch == '}':
+        value = jsonpath(jsonobj, stringbuilder)
+        if value is False:
+            raise JsonpathMismatchException
+        prev_stringbuilder = stack.pop()
+        stringbuilder = prev_stringbuilder + value[0]
+    else:
+        stringbuilder += ch
+if stringbuilder.startswith('$'):
+    value = jsonpath(jsonobj, stringbuilder)
+    if value is False:
+        raise Exception("错啦错啦")
+    stringbuilder = value[0]
+assert stringbuilder == expectedResult
+
