@@ -31,8 +31,8 @@ def generate_jsonpath_incorrect_message(jsonpath):
     return f'无法在ApplicationContext中找到 {jsonpath} 对应的值哦，看看是不是写错了？'
 
 
-def generate_jsonpath_str_parsing_message(str_w_jsonpath):
-    return f'这条带有jsonpath的属性解析失败了: {str_w_jsonpath}'
+def generate_jsonpath_str_parsing_message(error_identifier, str_w_jsonpath):
+    return f'{error_identifier}: 这条带有jsonpath的属性解析失败了: {str_w_jsonpath}'
 
 
 class YamlDataFieldIncorrectException(BaseException):
@@ -65,6 +65,6 @@ class YamlJsonpathIncorrectException(BaseException):
 
 class YamlJsonpathStrParsingException(BaseException):
 
-    def __init__(self, str_w_jsonpath: str):
-        message = generate_jsonpath_str_parsing_message(str_w_jsonpath)
+    def __init__(self, error_identifier, str_w_jsonpath: str):
+        message = generate_jsonpath_str_parsing_message(error_identifier, str_w_jsonpath)
         super().__init__(message)

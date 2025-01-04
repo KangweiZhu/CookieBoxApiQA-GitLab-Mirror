@@ -10,7 +10,7 @@
 """
 import json
 import logging
-from typing import Optional
+from typing import Optional, Dict, Any
 
 import requests
 
@@ -35,7 +35,7 @@ class HttpRequest(BaseRequest):
             resp = requests.request(
                 method=apitestcase.method,
                 url=request_url,
-                headers=self.sanitize_headers(context, apitestcase.headers),
+                headers=BaseRequest.sanitize_data_fields(context, apitestcase.headers, apitestcase),
                 params=apitestcase.params,
                 data=json.dumps(apitestcase.data),
                 timeout=5,

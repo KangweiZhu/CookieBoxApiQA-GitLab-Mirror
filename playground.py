@@ -43,37 +43,37 @@ from utils.misc.dict_util import DictUtil
 # if string is not empty:
 #     Bearer eWqweqeio1p23123mq a a a a
 
-class JsonpathMismatchException(Exception):
-    def __init__(self, **kwargs):
-        super().__init__('测试用例{identifier}中的{key}字段在解析jsonpath时出现异常'.format(**kwargs))
-
-jsonobj = defaultdict(DictUtil.dict_recursive_init)
-jsonobj['config']['range'] = 'global'
-jsonobj['global']['data']['token'] = 'abcd'
-expectedResult = 'Bearer abcd'
-s = 'Bearer {$.{$.config.range}.data.token}'
-stack = []
-stringbuilder = ''
-if s == '':
-     print('')
-for ch in s:
-    #print(stringbuilder, stack)
-
-    if ch == '{':
-        stack.append(stringbuilder)
-        stringbuilder = ''
-    elif ch == '}':
-        value = jsonpath(jsonobj, stringbuilder)
-        if value is False:
-            raise JsonpathMismatchException
-        prev_stringbuilder = stack.pop()
-        stringbuilder = prev_stringbuilder + value[0]
-    else:
-        stringbuilder += ch
-if stringbuilder.startswith('$'):
-    value = jsonpath(jsonobj, stringbuilder)
-    if value is False:
-        raise Exception("错啦错啦")
-    stringbuilder = value[0]
-assert stringbuilder == expectedResult
+# class JsonpathMismatchException(Exception):
+#     def __init__(self, **kwargs):
+#         super().__init__('测试用例{identifier}中的{key}字段在解析jsonpath时出现异常'.format(**kwargs))
+#
+# jsonobj = defaultdict(DictUtil.dict_recursive_init)
+# jsonobj['config']['range'] = 'global'
+# jsonobj['global']['data']['token'] = 'abcd'
+# expectedResult = 'Bearer abcd'
+# s = 'Bearer {$.{$.config.range}.data.token}'
+# stack = []
+# stringbuilder = ''
+# if s == '':
+#      print('')
+# for ch in s:
+#     #print(stringbuilder, stack)
+#
+#     if ch == '{':
+#         stack.append(stringbuilder)
+#         stringbuilder = ''
+#     elif ch == '}':
+#         value = jsonpath(jsonobj, stringbuilder)
+#         if value is False:
+#             raise JsonpathMismatchException
+#         prev_stringbuilder = stack.pop()
+#         stringbuilder = prev_stringbuilder + value[0]
+#     else:
+#         stringbuilder += ch
+# if stringbuilder.startswith('$'):
+#     value = jsonpath(jsonobj, stringbuilder)
+#     if value is False:
+#         raise Exception("错啦错啦")
+#     stringbuilder = value[0]
+# assert stringbuilder == expectedResult
 

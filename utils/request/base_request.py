@@ -6,7 +6,6 @@ import requests
 from jsonpath import jsonpath
 
 from modal.test_case import ApiTestCase
-from utils.context.context_util import ContextUtil
 from context.response_context import context
 from utils.misc.string_util import StringUtil
 
@@ -19,12 +18,13 @@ class BaseRequest:
     def __init__(self, apitestcase: ApiTestCase):
         self.apitestcase = apitestcase
 
-    def sanitize_data_fields(self, context: Dict[str, Any], field: Optional[Dict[str, str]]) -> Optional[Dict[str, str]]:
-        if not field or not context:
+    @staticmethod
+    def sanitize_data_fields(json_obj: Dict[str, Any], field: Optional[Dict[str, str]]) -> Optional[Dict[str, str]]:
+        if not field or not json_obj:
             return field
 
         for key, path in field.items():
-            value = ContextUtil.get_value_from_jsonpath(context, path)
+            value = StringUtil.replace_jsonpath_in_string(json_obj, path)
             if value:
                 field[key] = value
         return field

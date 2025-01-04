@@ -14,8 +14,8 @@ auth_login_01:
   headers:
     Content-Type : application/json
   data:
-    username: bakahentai
-    password: bakahentai
+    username: cookiebox_test
+    password: kexin1337
   context:
     response:
       global:
