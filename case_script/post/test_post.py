@@ -12,6 +12,7 @@ import json
 
 import pytest
 
+from case_script import testcase_bus
 from context.response_context import context
 from modal.test_case import ApiTestCase
 from utils.case.gen_util import load_test_case, load_identifier
@@ -26,7 +27,7 @@ class TestPost:
     def test_post(self, api_test_case: ApiTestCase):
         http_request = HttpRequest(api_test_case)
         resp = http_request.send_request()
-        http_request.teardown_request(resp)
         print(resp)
-        print(json.dumps(context, indent=4, ensure_ascii=False))
+        print(testcase_bus)
+        http_request.teardown_request(resp)
 

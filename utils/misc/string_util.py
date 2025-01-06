@@ -33,7 +33,19 @@ class StringUtil(object):
 
     @staticmethod
     def replace_jsonpath_in_string(json_obj: dict, s: Optional[str], error_identifier) -> Optional[str]:
+        """
+        尝试对字符串进行解析
+        如果字符串是空，直接返回。如果字符串以$开头，直接解析。如果字符串没有$，那直接返回，没有解析的必要，避免raise error。
+        :param json_obj:
+        :param s:
+        :param error_identifier:
+        :return:
+        """
         if StringUtil.is_null(s):
+            return s
+        if s.strip().startswith('$'):
+            return JsonUtil.parse_jsonpath(json_obj, s, error_identifier)[0]
+        if '$' not in s:
             return s
         stack = []
         stringbuilder = ""

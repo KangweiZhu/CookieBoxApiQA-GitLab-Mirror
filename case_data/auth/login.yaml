@@ -4,24 +4,22 @@ summary:
 
 auth_login_01:
   protocol: http
-  hosts: 127.0.0.1:8080, 127.0.0.1:8080
-  api: /api/auth/login
+  hosts: v4.concrete8.work:50090, v4.concrete8.work:50090
+  api: /user/login
   method: POST
   pathVariables:
   params:
-    page_num: 1
-    limit: 1
   headers:
     Content-Type : application/json
   data:
-    username: cookiebox_test
+    account: cookiebox_test_anicaa
     password: kexin1337
   context:
     response:
       global:
         token: $.data.token
       module:
-        username: $.data.userVO.username
+        nickname: $.data.info.nickname
   description:
 
 auth_login_02:

@@ -1,5 +1,7 @@
 from typing import Optional
-from jsonpath import jsonpath
+
+import jsonpath
+
 from exception.yaml_exceptions import YamlJsonpathStrParsingException
 from modal.test_case import ApiTestCase
 
@@ -14,7 +16,7 @@ class JsonUtil:
 
     @staticmethod
     def parse_jsonpath(json_obj, s, error_identifier):
-        values = jsonpath(json_obj, s)
+        values = jsonpath.jsonpath(json_obj, s)
         if values is False:
             raise YamlJsonpathStrParsingException(error_identifier, s)
         return values

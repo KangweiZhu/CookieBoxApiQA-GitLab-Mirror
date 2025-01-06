@@ -56,7 +56,7 @@ from utils.misc.dict_util import DictUtil
 # stringbuilder = ''
 # if s == '':
 #      print('')
-# for ch in s:
+# for ch in s
 #     #print(stringbuilder, stack)
 #
 #     if ch == '{':

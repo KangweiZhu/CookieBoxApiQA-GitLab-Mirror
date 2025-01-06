@@ -10,7 +10,7 @@
 """
 import json
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 
 import requests
 
@@ -19,6 +19,9 @@ from utils.request.base_request import BaseRequest, url_formatter
 
 
 class HttpRequest(BaseRequest):
+
+    def _sanitize(self, field: Any) -> Any:
+        return BaseRequest.sanitize_data_fields(context, field, self.apitestcase.identifier)
 
     def send_request(self) -> Optional[requests.Response]:
         apitestcase = self.apitestcase
@@ -29,18 +32,19 @@ class HttpRequest(BaseRequest):
                 'api': apitestcase.api
             }
         )
+        print(request_url)
         try:
             logging.info(f"Sending {apitestcase.method} request to {request_url}")
-            print(request_url)
+            print(self._sanitize(apitestcase.headers))
             resp = requests.request(
-                method=apitestcase.method,
-                url=request_url,
-                headers=BaseRequest.sanitize_data_fields(context, apitestcase.headers, apitestcase),
-                params=apitestcase.params,
-                data=json.dumps(apitestcase.data),
+                method=self._sanitize(apitestcase.method),
+                url=self._sanitize(request_url),
+                headers=self._sanitize(apitestcase.headers),
+                params=self._sanitize(apitestcase.params),
+                data=self._sanitize(json.dumps(apitestcase.data)),
                 timeout=5,
             )
-
+            print(resp)
             resp.raise_for_status()
             return resp
 
