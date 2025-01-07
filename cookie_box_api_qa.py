@@ -12,7 +12,7 @@ import json
 
 import pytest
 
-from context.response_context import context
+from context.context import context
 
 
 def run():
@@ -23,16 +23,3 @@ if __name__ == '__main__':
     cache = {}
     run()
     print(json.dumps(context, indent=4, ensure_ascii=False))
-
-
-    # request_url = 'http://127.0.0.1:8080/api/auth/login'
-    # resp = requests.request(
-    #     method='POST',
-    #     url=request_url,
-    #     headers={'Content-Type': 'application/json'},
-    #     params=None,
-    #     data=json.dumps({'username': 'bakahentai', 'password': 'bakahentai'}),
-    #     timeout=5
-    # )
-    # print(resp.text)
-    # print(resp)

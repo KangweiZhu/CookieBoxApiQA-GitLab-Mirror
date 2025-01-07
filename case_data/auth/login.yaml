@@ -4,15 +4,14 @@ summary:
 
 auth_login_01:
   protocol: http
-  hosts: v4.concrete8.work:50090, v4.concrete8.work:50090
+  hosts: localhost:50090, localhost:50090
   api: /user/login
   method: POST
-  pathVariables:
   params:
   headers:
     Content-Type : application/json
   data:
-    account: cookiebox_test_anicaa
+    account: cookietest_anicaa
     password: kexin1337
   context:
     response:
@@ -20,18 +19,6 @@ auth_login_01:
         token: $.data.token
       module:
         nickname: $.data.info.nickname
-  description:
-
-auth_login_02:
-  protocol: http
-  hosts: 127.0.0.1:8080
-  api: /login
-  method: POST
-  pathVariables:
-  params:
-  headers:
-  data:
-  context:
   description:
 
 

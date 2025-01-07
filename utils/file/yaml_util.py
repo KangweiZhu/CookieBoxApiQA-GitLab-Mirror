@@ -9,6 +9,7 @@
     12/20/24 07:55    Anicaa (Kangwei Zhu)  1.0
 """
 import os
+from collections.abc import Sequence
 from os import DirEntry
 import yaml
 from exception.yaml_exceptions import YamlDataFieldMissingException, YamlSummaryMissingException
@@ -125,6 +126,10 @@ class YamlUtil:
             description = case_data.get('description')
             return description
 
+        def get_teardown_sql(case_data) -> Sequence[str]:
+            teardown_sql = case_data.get('teardown_sql')
+            return teardown_sql
+
         summary = get_summary(raw_data)
         project = get_project(summary)
         module = get_module(summary)
@@ -151,7 +156,8 @@ class YamlUtil:
                         headers=get_headers(case_data),
                         data=get_data(case_data),
                         context=get_context(case_data, **exception_message_fields),
-                        description=get_description(case_data)
+                        description=get_description(case_data),
+                        teardown_sql=get_teardown_sql(case_data)
                     )
                     testcase_container[project][module][identifier] = testcase
                     identifier = key

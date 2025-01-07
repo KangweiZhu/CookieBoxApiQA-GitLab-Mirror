@@ -44,7 +44,7 @@ class StringUtil(object):
         if StringUtil.is_null(s):
             return s
         if s.strip().startswith('$'):
-            return JsonUtil.parse_jsonpath(json_obj, s, error_identifier)[0]
+            return JsonUtil.parse_jsonpath(json_obj, s, error_identifier)
         if '$' not in s:
             return s
         stack = []
@@ -54,14 +54,14 @@ class StringUtil(object):
                 stack.append(stringbuilder)
                 stringbuilder = ""
             elif ch == '}':
-                values = JsonUtil.parse_jsonpath(json_obj, s, error_identifier)
+                value = JsonUtil.parse_jsonpath(json_obj, stringbuilder, error_identifier)
                 prev_stringbuilder = stack.pop()
-                stringbuilder = prev_stringbuilder + values[0]
+                stringbuilder = prev_stringbuilder + value
             else:
                 stringbuilder += ch
         if stringbuilder and stringbuilder.startswith('$'):
-            values = JsonUtil.parse_jsonpath(json_obj, s, error_identifier)
-            stringbuilder = values[0]
+            value = JsonUtil.parse_jsonpath(json_obj, stringbuilder, error_identifier)
+            stringbuilder = value
         return stringbuilder
 
 if __name__ == '__main__':

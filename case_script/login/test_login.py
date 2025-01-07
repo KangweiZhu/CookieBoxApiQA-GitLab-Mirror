@@ -11,8 +11,9 @@
 import json
 
 import pytest
+import mysql.connector
 
-from context.response_context import context
+from context.context import context
 from modal.test_case import ApiTestCase
 from utils.case.gen_util import load_test_case, load_identifier
 from utils.request.http_request import HttpRequest

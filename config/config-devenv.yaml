@@ -3,3 +3,12 @@ project_name: 饼盒APP
 
 # 被测项目ip+端口，使用逗号隔开，支持多ip
 project_host: 127.0.0.1:8080
+
+mysql:
+  host: 127.0.0.1
+  port: 50098
+  username: root
+  password: cookiebox_prerelease
+  database: cake_box
+
+

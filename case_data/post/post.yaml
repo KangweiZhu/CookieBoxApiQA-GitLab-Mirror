@@ -5,14 +5,14 @@ summary:
 # 需要登陆，携带token才能够查询post. 可以通过context来拿到token
 post_add_01:
   protocol: http
-  hosts: v4.concrete8.work:50090
+  hosts: 127.0.0.1:50090
   api: /post
   method:  POST
   params:
   data:
-    content : abcdefghklm111
+    content : 没有什么内容，单纯为了凑满10个字～～
     forumId : 1
-    title : abqqupokskala
+    title : 测试用的title
     summary: ""
     coverImage : ""
   headers:
@@ -22,6 +22,11 @@ post_add_01:
   context:
   description:
   teardown_sql:
+    - delete from post where post_id = {$.data.postId}
+    - delete from audit_status where audit_status_id = {$.data.auditStatusId}
+
+
+
 
 
 

@@ -18,5 +18,6 @@ class JsonUtil:
     def parse_jsonpath(json_obj, s, error_identifier):
         values = jsonpath.jsonpath(json_obj, s)
         if values is False:
-            raise YamlJsonpathStrParsingException(error_identifier, s)
-        return values
+            #raise YamlJsonpathStrParsingException(error_identifier, s)
+            print('无法解析json')
+        return str(values[0])

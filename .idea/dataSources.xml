@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://v4.concrete8.work:50098</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="饼盒测试-MySQL" uuid="3e2394b8-d8f7-4051-8ca3-18480ae036d9">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:50098</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

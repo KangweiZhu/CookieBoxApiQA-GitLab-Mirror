@@ -1,14 +1,11 @@
-import json
-import logging
-from typing import Optional, Dict, Any, Union
-
 import requests
-from jsonpath import jsonpath
 
+from typing import Optional, Dict, Any, Union
 from modal.test_case import ApiTestCase
-from context.response_context import context
+from context.context import context
 from utils.misc.json_util import JsonUtil
 from utils.misc.string_util import StringUtil
+from utils.mysql.mysql_connection_handler import MysqlUtil, MysqlConnection
 
 
 def url_formatter(**kwargs) -> str:
@@ -27,9 +24,7 @@ class BaseRequest:
             return field
 
         if isinstance(field, Dict):
-            print(context)
             for key, s in field.items():
-                print(s)
                 value = StringUtil.replace_jsonpath_in_string(json_obj, s, error_identifier)
                 field[key] = value
         elif isinstance(field, str):
@@ -57,13 +52,19 @@ class BaseRequest:
 
         json_resp = resp.json()
         context[apitestcase.identifier] = json_resp
-        if not apitestcase.context:
-            return
-        for context_type, context_scopes in apitestcase.context.items():
-            context.setdefault(context_type, {})
-            for scope, attributes in context_scopes.items():
-                context[context_type].setdefault(scope, {})
-                for name, json_expr in attributes.items():
-                    extracted_value = JsonUtil.parse_jsonpath(json_resp, json_expr,
-                                                              f'{apitestcase.identifier}-{scope}-{name}')
-                    context[context_type][scope][name] = extracted_value[0]
+        if apitestcase.context:
+            for context_type, context_scopes in apitestcase.context.items():
+                context.setdefault(context_type, {})
+                for scope, attributes in context_scopes.items():
+                    context[context_type].setdefault(scope, {})
+                    for name, json_expr in attributes.items():
+                        extracted_value = JsonUtil.parse_jsonpath(json_resp, json_expr,
+                                                                  f'{apitestcase.identifier}-{scope}-{name}')
+                        context[context_type][scope][name] = extracted_value
+        if apitestcase.teardown_sql:
+            for sql in apitestcase.teardown_sql:
+                sanitized_sql = StringUtil.replace_jsonpath_in_string(json_resp, sql, f'{apitestcase.identifier}-teardown_sql-{sql}')
+                mysql_connection = MysqlConnection()
+                MysqlUtil.execute(mysql_connection.connection, sanitized_sql)
+
+

@@ -10,6 +10,7 @@
     ------------      -------------------   -------- 
     12/23/24 09:25    Anicaa (Kangwei Zhu)  1.0
 """
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 @dataclass
@@ -17,7 +18,7 @@ class ApiTestCase:
 
     def __init__(self, project: str, module: str, identifier: str, protocol: str, host: str, method: str, api: str,
                  params: dict[any, any], headers: dict[any, any],
-                 data: dict[any, any], context: dict[any, dict[any, dict[any, any]]], description: str):
+                 data: dict[any, any], context: dict[any, dict[any, dict[any, any]]], description: str, teardown_sql: Sequence[str]):
         self.project = project
         self.module = module
         self.identifier = identifier
@@ -30,6 +31,7 @@ class ApiTestCase:
         self.data = data
         self.context = context
         self.description = description
+        self.teardown_sql = teardown_sql
 
     def beautifier(self) -> dict:
         return {
@@ -44,14 +46,15 @@ class ApiTestCase:
             "Headers": self.headers,
             "Data": self.data,
             "context": self.context,
-            "Description": self.description
+            "Description": self.description,
+            "teardown_sql": self.teardown_sql
         }
 
     def __str__(self):
         return (f"ApiTestCase(Project: {self.project}, Module: {self.module}, Identifier: {self.identifier}, "
                 f"Protocol: {self.protocol}, Host: {self.host}, Method: {self.method}, Api: {self.api}, "
                 f"Params: {self.params}, Headers: {self.headers}, Data: {self.data}, "
-                f"context: {self.context}, Description: {self.description})")
+                f"context: {self.context}, Description: {self.description}), Teardown_sql: {self.teardown_sql}")
 
     def __repr__(self):
         return str(self.beautifier())

@@ -14,7 +14,7 @@ from typing import Optional, Any
 
 import requests
 
-from context.response_context import context
+from context.context import context
 from utils.request.base_request import BaseRequest, url_formatter
 
 
@@ -32,10 +32,8 @@ class HttpRequest(BaseRequest):
                 'api': apitestcase.api
             }
         )
-        print(request_url)
         try:
             logging.info(f"Sending {apitestcase.method} request to {request_url}")
-            print(self._sanitize(apitestcase.headers))
             resp = requests.request(
                 method=self._sanitize(apitestcase.method),
                 url=self._sanitize(request_url),
@@ -44,7 +42,6 @@ class HttpRequest(BaseRequest):
                 data=self._sanitize(json.dumps(apitestcase.data)),
                 timeout=5,
             )
-            print(resp)
             resp.raise_for_status()
             return resp
 
