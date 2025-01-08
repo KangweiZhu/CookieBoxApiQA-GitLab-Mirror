@@ -11,7 +11,7 @@
 import json
 from os import DirEntry
 
-from utils.file.yaml_util import YamlUtil
+from utils.misc.yaml_util import YamlUtil
 from utils.misc.json_util import JsonUtil
 from utils.misc.path_exporter import data_dir
 

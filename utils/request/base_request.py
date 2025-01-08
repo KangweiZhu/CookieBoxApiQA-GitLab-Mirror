@@ -52,6 +52,10 @@ class BaseRequest:
 
         json_resp = resp.json()
         context[apitestcase.identifier] = json_resp
+
+        """
+            如果测试用例的上下文字段不为空，就按照指定的名字，存入上下文
+        """
         if apitestcase.context:
             for context_type, context_scopes in apitestcase.context.items():
                 context.setdefault(context_type, {})
@@ -61,10 +65,55 @@ class BaseRequest:
                         extracted_value = JsonUtil.parse_jsonpath(json_resp, json_expr,
                                                                   f'{apitestcase.identifier}-{scope}-{name}')
                         context[context_type][scope][name] = extracted_value
-        if apitestcase.teardown_sql:
-            for sql in apitestcase.teardown_sql:
-                sanitized_sql = StringUtil.replace_jsonpath_in_string(json_resp, sql, f'{apitestcase.identifier}-teardown_sql-{sql}')
-                mysql_connection = MysqlConnection()
-                MysqlUtil.execute(mysql_connection.connection, sanitized_sql)
+
+        """
+            Setup SQL 与 Teardown SQL
+            
+            各自默认都有两种：
+                - persist: 保存sql执行的结果到context
+                    persist这个key对应一个dict，dict的key是存放在context中的key。dict的value则是sql，sql执行后，会把结果和key进行映射，放在context里。
+                    
+                    目前只支持insert，会将insert
+                    
+                    presist:
+                        test_login_01_sql_01: 
+                            - insert into post (xxx,xxx) values (xxx, xxx)
+                            - [('Title 1', 'Content 1'), ('Title 2', 'Content 2')]
+                
+                    
+                - execute: 仅执行
+                    execute这个key对应的是一个list，就是一系列的需要被执行的sql，但是并不关心执行结果
+                    
+                我们允许SQL中，包含jsonpath。 比如 select id from post where content = {$.test_comment_01.data.content}
+                
+                一些小tips:
+                    >>> LAST_ROW_ID(): cursor.lastrowid => 获取插入后，auto increment生成的id，可以保存这个id，或者可以通过这个id，查询到新插入的行的记录
+                    
+                    >>> INSERT INTO post (title, content) VALUES ('Test Title', 'Test Content')
+                        RETURNING *; --同样能够获取到执行一条插入后的结果
+                        
+                    >>> execute()和executeall()返回的都是受影响的行数。使用executemany()进行插入时，我们可以通过 
+                        select * from table where id >= lastrowid - affectedid + 1 && id <= lastrowid
+                        配合上fetchall(), for row in cursor.fetchall(). 来存储fetch到的结果。
+                         
+        """
+        if apitestcase.sql:
+            teardown_sqls = apitestcase.sql.get("teardown")
+            if teardown_sqls:
+                for sql_type, sql_container in teardown_sqls.items():
+                    if sql_type is 'persist':
+                        if not isinstance(sql_container, dict):
+                            pass
+                        for key, sql in sql_container.items():
+                    elif sql_type is 'execute':
+                        if not isinstance(sql_container, list):
+                            pass
+                        for sql in sql_container:
+                            mysql_connection = MysqlConnection()
+                            sanitized_sql = StringUtil.replace_jsonpath_in_string(context, sql, apitestcase.identifier)
+                            MysqlUtil.execute(mysql_connection.connection, sql)
+                    else:
+                        pass
+
 
 

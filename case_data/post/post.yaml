@@ -21,9 +21,34 @@ post_add_01:
   needValidation:
   context:
   description:
-  teardown_sql:
-    - delete from post where post_id = {$.data.postId}
-    - delete from audit_status where audit_status_id = {$.data.auditStatusId}
+  setup_sql:
+  sql:
+    setup:
+      persist:
+        postId:
+          - insert into post () values ()
+          - [][]
+
+      normal:
+    teardown:
+      persist:
+      execute:
+        - delete from post where post_id = {$.self.data.postId}
+        - delete from audit_status where audit_status_id = {$.self.data.auditStatusId}
+
+
+
+#post_delete_01:
+#  protocol: http
+#  host: 127.0.0.1
+#  api: /post/{$.sql.post_delete_01.}
+#  method: DelEte
+#  param:
+#  data:
+#  headers:
+#    Content-Type: application/json
+
+
 
 
 

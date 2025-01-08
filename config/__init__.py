@@ -8,7 +8,7 @@
     ------------      -------------------   --------
     12/20/24 08:09    Anicaa (Kangwei Zhu)  1.0
 """
-from utils.file.yaml_util import YamlUtil
+from utils.misc.yaml_util import YamlUtil
 from utils.misc.path_exporter import config_dir
 
 config_base_path = f'{config_dir}/config'

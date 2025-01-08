@@ -9,9 +9,10 @@
     12/20/24 07:55    Anicaa (Kangwei Zhu)  1.0
 """
 import os
-from collections.abc import Sequence
-from os import DirEntry
 import yaml
+
+from os import DirEntry
+from typing import Optional, Dict
 from exception.yaml_exceptions import YamlDataFieldMissingException, YamlSummaryMissingException
 from modal.test_case import ApiTestCase
 
@@ -113,12 +114,6 @@ class YamlUtil:
             return data
 
         def get_context(case_data, **kwargs) -> dict[str, dict[str, dict[any, any]]]:
-            """
-
-            :param case_data:
-            :param kwargs:
-            :return: {context_type: {context_scope: {name: value}}}
-            """
             context = case_data.get('context')
             return context
 
@@ -126,9 +121,9 @@ class YamlUtil:
             description = case_data.get('description')
             return description
 
-        def get_teardown_sql(case_data) -> Sequence[str]:
-            teardown_sql = case_data.get('teardown_sql')
-            return teardown_sql
+        def get_sql(case_data) -> Optional[Dict[str, any]]:
+            sql = case_data.get('sql')
+            return sql
 
         summary = get_summary(raw_data)
         project = get_project(summary)
@@ -157,7 +152,7 @@ class YamlUtil:
                         data=get_data(case_data),
                         context=get_context(case_data, **exception_message_fields),
                         description=get_description(case_data),
-                        teardown_sql=get_teardown_sql(case_data)
+                        sql=get_sql(case_data)
                     )
                     testcase_container[project][module][identifier] = testcase
                     identifier = key
