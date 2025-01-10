@@ -26,10 +26,9 @@ post_add_01:
     setup:
       persist:
         postId:
-          - insert into post () values ()
-          - [][]
-
+          - insert into post () values () []
       normal:
+
     teardown:
       persist:
       execute:

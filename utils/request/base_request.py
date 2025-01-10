@@ -5,7 +5,7 @@ from modal.test_case import ApiTestCase
 from context.context import context
 from utils.misc.json_util import JsonUtil
 from utils.misc.string_util import StringUtil
-from utils.mysql.mysql_connection_handler import MysqlUtil, MysqlConnection
+from utils.mysql.mysql import MysqlUtil, MysqlConnection
 
 
 def url_formatter(**kwargs) -> str:
@@ -73,7 +73,9 @@ class BaseRequest:
                 - persist: 保存sql执行的结果到context
                     persist这个key对应一个dict，dict的key是存放在context中的key。dict的value则是sql，sql执行后，会把结果和key进行映射，放在context里。
                     
-                    目前只支持insert，会将insert
+                    目前只支持insert和select。 update, delete应该也和insert一样处理吧，但是我还没试过，python实在不熟（java其实也不熟。。）。不过持久化并用到delete结果的场景我还暂时想不出来
+                    
+                    还有一个要做的？解析的时候不仅仅要解析jsonpath，还要解析sql？有必要这样子做吗？要不直接放setup sql，然后持久化。要用的时候直接从context里面取？
                     
                     presist:
                         test_login_01_sql_01: 
@@ -104,7 +106,9 @@ class BaseRequest:
                     if sql_type is 'persist':
                         if not isinstance(sql_container, dict):
                             pass
-                        for key, sql in sql_container.items():
+                        for key, sql_expr in sql_container.items():
+                            sql, sql_datas = StringUtil.sanitize_sql(sql_expr)
+
                     elif sql_type is 'execute':
                         if not isinstance(sql_container, list):
                             pass

@@ -9,8 +9,9 @@
 12/29/24 13:19    Anicaa (Kangwei Zhu)  1.0         None
 '''
 import json
+import re
 from collections import defaultdict
-from typing import Optional
+from typing import Optional, Tuple
 
 import jsonpath
 
@@ -63,6 +64,47 @@ class StringUtil(object):
             value = JsonUtil.parse_jsonpath(json_obj, stringbuilder, error_identifier)
             stringbuilder = value
         return stringbuilder
+
+    @staticmethod
+    def sanitize_sql(sql: str) -> Tuple[list, str]:
+        """
+
+        例如
+            sql = "insert into post (post_id, comment_id) values (%s, %s) [(1, one), (2,two), (3,three), (4,four)]"
+
+        我们会将其进行拆分，分为两个部分。
+            1. SQL部分: insert into post (post_id, comment_id) values (%s, %s)
+            2. 数据部分: [(1, one), (2,two), (3,three), (4,four)]
+
+        数据部分可以只有一个，也可以有多个。通过这种拆分，我们就可以直接用executemany，来方便地执行测试用例
+
+        :param sql:
+        :return:
+        """
+        final_datas = list()
+        match = re.search('\[\((.*)\)\]', sql)
+        if match:
+            group1 = match.group(1).strip()
+            group1 = group1.replace(' ', '')
+            datas = group1.split('),(')
+
+            for data in datas:
+                elements = data.split(',')
+                for index, element in enumerate(elements):
+                    if element.isnumeric():
+                        elements[index] = int(element)
+                final_datas.append(elements)
+        else:
+            pass #raise exception
+
+        sql_end_index = sql.find('[')
+        if sql_end_index == -1:
+            pass #raise exception
+        else:
+            sql = sql[:sql_end_index - 1]
+
+        return final_datas, sql
+
 
 if __name__ == '__main__':
     context = defaultdict(DictUtil.dict_recursive_init)

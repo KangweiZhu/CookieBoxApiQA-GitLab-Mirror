@@ -1,12 +1,12 @@
 # -*- encoding: utf-8 -*-
 """
-    @File    :   playground.py   
+    @File    :   playground.py
     @Contact :   anicaazhu@gmail.com kangwei2@illinois.edu
-    @Description: 
+    @Description:
 
-    @Modify Time      @Author               @Version 
-    ------------      -------------------   -------- 
-    12/25/24 21:25    Anicaa (Kangwei Zhu)  1.0      
+    @Modify Time      @Author               @Version
+    ------------      -------------------   --------
+    12/25/24 21:25    Anicaa (Kangwei Zhu)  1.0
 """
 from collections import defaultdict
 
@@ -76,4 +76,33 @@ from utils.misc.dict_util import DictUtil
 #         raise Exception("错啦错啦")
 #     stringbuilder = value[0]
 # assert stringbuilder == expectedResult
+
+
+# import re
+
+# from utils.misc.string_util import StringUtil
+
+# sql = "insert into post (post_id, comment_id) values (%s, %s) [(1, one), (2,two), (3,three), (4,four)]"
+#
+# match = re.search(r'\[\((.*)\)]', sql)
+# print(f'Match: {match}')
+# if match:
+#     group1 = match.group(1).strip() # group0是整个匹配到的字符串的完整输出，而group1是具体的匹配结果
+#     group1 = group1.replace(' ', '')
+#
+#     datas = group1.split('),(')
+#     result = list()
+#
+#     for data in datas:
+#         data_list = data.split(',')
+#         for i, element in enumerate(data_list):
+#             if element.isnumeric():
+#                 data_list[i] = int(data_list[i])
+#         result.append(data_list)
+#     print(result)
+
+# print(StringUtil.sanitize_sql(sql))
+# find_result = sql.find('[', 0)
+# print(find_result)
+# print(sql[:find_result - 1])
 
