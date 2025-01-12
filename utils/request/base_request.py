@@ -1,6 +1,8 @@
 import requests
 
 from typing import Optional, Dict, Any, Union
+
+from modal.enum.sql_enum import SQLEnum
 from modal.test_case import ApiTestCase
 from context.context import context
 from utils.misc.json_util import JsonUtil
@@ -31,6 +33,9 @@ class BaseRequest:
             field = StringUtil.replace_jsonpath_in_string(json_obj, field, error_identifier)
 
         return field
+
+    def setup_request(self):
+        MysqlUtil.execute_setup_teardown_sql(MysqlConnection, )
 
     def teardown_request(self, resp: requests.Response) -> None:
         """
@@ -102,22 +107,8 @@ class BaseRequest:
         if apitestcase.sql:
             teardown_sqls = apitestcase.sql.get("teardown")
             if teardown_sqls:
-                for sql_type, sql_container in teardown_sqls.items():
-                    if sql_type is 'persist':
-                        if not isinstance(sql_container, dict):
-                            pass
-                        for key, sql_expr in sql_container.items():
-                            sql, sql_datas = StringUtil.sanitize_sql(sql_expr)
+                MysqlUtil.execute_setup_teardown_sql(MysqlConnection(), apitestcase, SQLEnum.SQL_EXECUTION_TIMING_TEARDOWN.value)
 
-                    elif sql_type is 'execute':
-                        if not isinstance(sql_container, list):
-                            pass
-                        for sql in sql_container:
-                            mysql_connection = MysqlConnection()
-                            sanitized_sql = StringUtil.replace_jsonpath_in_string(context, sql, apitestcase.identifier)
-                            MysqlUtil.execute(mysql_connection.connection, sql)
-                    else:
-                        pass
 
 
 

@@ -112,14 +112,18 @@ class MysqlUtil:
     def execute_setup_teardown_sql(connection, apitestcase: ApiTestCase, timing: Literal['setup', 'teardown']):
         timing_sqls = apitestcase.sql.get(timing)
         for task_type, sql_containers in timing_sqls:
+            if task_type is None or sql_containers is None:
+                return
             if task_type == 'persist':
                 if isinstance(sql_containers, dict):
                     for context_key, sql_expr in sql_containers.items():
                         data, sql = StringUtil.sanitize_sql(sql_expr)
                         MysqlUtil.execute_many(connection, sql, data)
+                        execute_result = None
                         if MysqlUtil.get_sql_typing(sql) == SQLEnum.SQL_TYPE_SELECT:
                             execute_result = MysqlUtil.get_select_result(connection)
-                            context['sql']['presist'][timing] = execute_result
+
+                        context['sql']['persist'][timing] = execute_result
                 else:
                     pass
             elif task_type == 'execute':

@@ -15,3 +15,5 @@ class SQLEnum(Enum):
     SQL_TYPE_INSERT = 'insert'
     SQL_TYPE_UPDATE = 'update'
     SQL_TYPE_DELETE = 'delete'
+    SQL_EXECUTION_TIMING_TEARDOWN = 'teardown'
+    SQL_EXECUTION_TIMING_SETUP = 'setup'

@@ -25,15 +25,10 @@ post_add_01:
   sql:
     setup:
       persist:
-        postId:
-          - insert into post () values () []
       normal:
-
     teardown:
       persist:
       execute:
-        - delete from post where post_id = {$.self.data.postId}
-        - delete from audit_status where audit_status_id = {$.self.data.auditStatusId}
 
 
 
