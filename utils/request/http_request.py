@@ -14,14 +14,11 @@ from typing import Optional, Any
 
 import requests
 
-from context.context import context
+from context.context import application_context
 from utils.request.base_request import BaseRequest, url_formatter
 
 
 class HttpRequest(BaseRequest):
-
-    def _sanitize(self, field: Any) -> Any:
-        return BaseRequest.sanitize_data_fields(context, field, self.apitestcase.identifier)
 
     def send_request(self) -> Optional[requests.Response]:
         apitestcase = self.apitestcase
@@ -32,14 +29,15 @@ class HttpRequest(BaseRequest):
                 'api': apitestcase.api
             }
         )
+        print("url: ", self.sanitize_data_fields(application_context, request_url))
         try:
             logging.info(f"Sending {apitestcase.method} request to {request_url}")
             resp = requests.request(
-                method=self._sanitize(apitestcase.method),
-                url=self._sanitize(request_url),
-                headers=self._sanitize(apitestcase.headers),
-                params=self._sanitize(apitestcase.params),
-                data=self._sanitize(json.dumps(apitestcase.data)),
+                method=self.sanitize_data_fields(application_context, apitestcase.method),
+                url=self.sanitize_data_fields(application_context, request_url),
+                headers=self.sanitize_data_fields(application_context, apitestcase.headers),
+                params=self.sanitize_data_fields(application_context, apitestcase.params),
+                data=self.sanitize_data_fields(application_context, json.dumps(apitestcase.data), is_json_str=True),
                 timeout=5,
             )
             resp.raise_for_status()

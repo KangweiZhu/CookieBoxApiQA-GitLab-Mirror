@@ -8,4 +8,8 @@
     ------------      -------------------   -------- 
     12/25/24 21:16    Anicaa (Kangwei Zhu)  1.0      
 """
-context = {}
+from collections import defaultdict
+
+from utils.misc.dict_util import DictUtil
+
+application_context = defaultdict(DictUtil.dict_recursive_init)

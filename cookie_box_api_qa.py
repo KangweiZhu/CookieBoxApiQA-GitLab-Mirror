@@ -12,7 +12,7 @@ import json
 
 import pytest
 
-from context.context import context
+from context.context import application_context
 
 
 def run():
@@ -22,4 +22,4 @@ def run():
 if __name__ == '__main__':
     cache = {}
     run()
-    print(json.dumps(context, indent=4, ensure_ascii=False))
+    print(json.dumps(application_context, indent=4, ensure_ascii=False))

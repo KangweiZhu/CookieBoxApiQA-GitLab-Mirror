@@ -18,7 +18,7 @@ auth_login_01:
       global:
         token: $.data.token
       module:
-        nickname: $.data.info.nickname
+        userId: $.data.info.id
   description:
 
 

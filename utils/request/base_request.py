@@ -1,41 +1,47 @@
+import json
+
 import requests
 
 from typing import Optional, Dict, Any, Union
 
 from modal.enum.sql_enum import SQLEnum
 from modal.test_case import ApiTestCase
-from context.context import context
+from context.context import application_context
 from utils.misc.json_util import JsonUtil
 from utils.misc.string_util import StringUtil
-from utils.mysql.mysql import MysqlUtil, MysqlConnection
+from utils.db.mysql_util import MysqlUtil, MysqlConnection
 
 
 def url_formatter(**kwargs) -> str:
     return "{protocol}://{host}{api}".format(**kwargs)
 
+def sanitize_dict(json_obj:dict, field, error_identifier):
+    for key, s in field.items():
+        value = StringUtil.replace_jsonpath_in_string(json_obj, s, error_identifier)
+        field[key] = value
+    print(field)
+    return field
 
 class BaseRequest:
 
     def __init__(self, apitestcase: ApiTestCase):
         self.apitestcase = apitestcase
 
-    @staticmethod
-    def sanitize_data_fields(json_obj: dict, field: Union[str, Dict[str, str], None], error_identifier) -> \
+    def sanitize_data_fields(self, json_obj: dict, field: Union[str, Dict[str, str], None], is_json_str: bool = False) -> \
     Union[str, Dict, None]:
         if not field or not json_obj:
             return field
-
-        if isinstance(field, Dict):
-            for key, s in field.items():
-                value = StringUtil.replace_jsonpath_in_string(json_obj, s, error_identifier)
-                field[key] = value
+        if is_json_str and isinstance(field, str):
+            field = json.dumps(sanitize_dict(json_obj=json_obj, field=json.loads(field), error_identifier=self.apitestcase.identifier))
+        elif isinstance(field, Dict):
+            field = sanitize_dict(json_obj=json_obj, field=field, error_identifier=self.apitestcase.identifier)
         elif isinstance(field, str):
-            field = StringUtil.replace_jsonpath_in_string(json_obj, field, error_identifier)
+            field = StringUtil.replace_jsonpath_in_string(json_obj, field, self.apitestcase.identifier)
 
         return field
 
     def setup_request(self):
-        MysqlUtil.execute_setup_teardown_sql(MysqlConnection, )
+        MysqlUtil.execute_setup_teardown_sql(MysqlConnection().connection, self.apitestcase, SQLEnum.SQL_EXECUTION_TIMING_SETUP.value)
 
     def teardown_request(self, resp: requests.Response) -> None:
         """
@@ -56,20 +62,20 @@ class BaseRequest:
             return
 
         json_resp = resp.json()
-        context[apitestcase.identifier] = json_resp
+        application_context[apitestcase.identifier] = json_resp
 
         """
             如果测试用例的上下文字段不为空，就按照指定的名字，存入上下文
         """
         if apitestcase.context:
             for context_type, context_scopes in apitestcase.context.items():
-                context.setdefault(context_type, {})
+                application_context.setdefault(context_type, {})
                 for scope, attributes in context_scopes.items():
-                    context[context_type].setdefault(scope, {})
+                    application_context[context_type].setdefault(scope, {})
                     for name, json_expr in attributes.items():
                         extracted_value = JsonUtil.parse_jsonpath(json_resp, json_expr,
                                                                   f'{apitestcase.identifier}-{scope}-{name}')
-                        context[context_type][scope][name] = extracted_value
+                        application_context[context_type][scope][name] = extracted_value
 
         """
             Setup SQL 与 Teardown SQL
@@ -104,10 +110,7 @@ class BaseRequest:
                         配合上fetchall(), for row in cursor.fetchall(). 来存储fetch到的结果。
                          
         """
-        if apitestcase.sql:
-            teardown_sqls = apitestcase.sql.get("teardown")
-            if teardown_sqls:
-                MysqlUtil.execute_setup_teardown_sql(MysqlConnection(), apitestcase, SQLEnum.SQL_EXECUTION_TIMING_TEARDOWN.value)
+        MysqlUtil.execute_setup_teardown_sql(MysqlConnection().connection, apitestcase, SQLEnum.SQL_EXECUTION_TIMING_TEARDOWN.value)
 
 
 

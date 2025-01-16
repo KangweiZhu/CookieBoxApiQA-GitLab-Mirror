@@ -8,15 +8,13 @@
 ------------      -------------------   --------    -----------
 12/29/24 13:19    Anicaa (Kangwei Zhu)  1.0         None
 '''
-import json
 import re
-from collections import defaultdict
 from typing import Optional, Tuple
 
 import jsonpath
 
+from context.context import application_context
 from exception.yaml_exceptions import YamlJsonpathStrParsingException
-from utils.misc.dict_util import DictUtil
 from utils.misc.json_util import JsonUtil
 
 
@@ -33,6 +31,10 @@ class StringUtil(object):
         return s is None or s.strip() == ""
 
     @staticmethod
+    def not_a_string(s) -> bool:
+        return s and not isinstance(s, str)
+
+    @staticmethod
     def replace_jsonpath_in_string(json_obj: dict, s: Optional[str], error_identifier) -> Optional[str]:
         """
         尝试对字符串进行解析
@@ -42,6 +44,8 @@ class StringUtil(object):
         :param error_identifier:
         :return:
         """
+        if StringUtil.not_a_string(s):
+            return s
         if StringUtil.is_null(s):
             return s
         if s.strip().startswith('$'):
@@ -66,7 +70,7 @@ class StringUtil(object):
         return stringbuilder
 
     @staticmethod
-    def sanitize_sql(sql: str) -> Tuple[list, str]:
+    def sanitize_sql(sql: str, error_identifier) -> Tuple[list, str]:
         """
 
         例如
@@ -84,13 +88,14 @@ class StringUtil(object):
         final_datas = list()
         match = re.search('\[\((.*)\)\]', sql)
         if match:
-            group1 = match.group(1).strip()
-            group1 = group1.replace(' ', '')
+            group1 = match.group(1)
+            # group1 = group1.replace(' ', '')
             datas = group1.split('),(')
-
             for data in datas:
                 elements = data.split(',')
                 for index, element in enumerate(elements):
+                    element = element.strip()
+                    element = StringUtil.replace_jsonpath_in_string(application_context, element, error_identifier)
                     if element.isnumeric():
                         elements[index] = int(element)
                 final_datas.append(elements)
@@ -105,9 +110,9 @@ class StringUtil(object):
 
         return final_datas, sql
 
-
-if __name__ == '__main__':
-    context = defaultdict(DictUtil.dict_recursive_init)
-    context['response']['global']['token'] = 'haha'
-    context['data'] = 'queshi'
-    print(StringUtil.replace_jsonpath_in_string(context, 'Bearer {$.response.global.token} woshizhu{ {$.data}', 1))
+#
+# if __name__ == '__main__':
+#     context = defaultdict(DictUtil.dict_recursive_init)
+#     context['response']['global']['token'] = 'haha'
+#     context['data'] = 'queshi'
+#     print(StringUtil.replace_jsonpath_in_string(context, 'Bearer {$.response.global.token} woshizhu{ {$.data}', 1))

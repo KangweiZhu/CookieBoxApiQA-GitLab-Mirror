@@ -10,7 +10,6 @@
     ------------      -------------------   -------- 
     12/23/24 09:25    Anicaa (Kangwei Zhu)  1.0
 """
-from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Dict, Union
 

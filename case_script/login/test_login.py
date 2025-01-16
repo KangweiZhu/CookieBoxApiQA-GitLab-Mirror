@@ -13,7 +13,6 @@ import json
 import pytest
 import mysql.connector
 
-from context.context import context
 from modal.test_case import ApiTestCase
 from utils.case.gen_util import load_test_case, load_identifier
 from utils.request.http_request import HttpRequest
@@ -26,6 +25,7 @@ class TestLogin:
     @pytest.mark.parametrize(argnames="api_test_case", argvalues=load_test_case(project_name, module_name), ids=load_identifier(project_name, module_name))
     def test_login(self, api_test_case: ApiTestCase):
         http_request = HttpRequest(api_test_case)
+        http_request.setup_request()
         resp = http_request.send_request()
         http_request.teardown_request(resp)
 

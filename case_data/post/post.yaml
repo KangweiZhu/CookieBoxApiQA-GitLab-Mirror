@@ -21,26 +21,33 @@ post_add_01:
   needValidation:
   context:
   description:
-  setup_sql:
   sql:
     setup:
       persist:
-      normal:
+      execute:
     teardown:
       persist:
       execute:
+        - delete from post where post_id = %s [($.self.data.postId)]
+        - delete from audit_status where audit_status_id = %s [($.self.data.auditStatusId)]
 
+post_delete_01:
+  protocol: http
+  hosts: 127.0.0.1:50090
+  api: /post/{$.sql.setup.persist.delete_01_post_id[0]}
+  method: DelEte
+  params:
+  data:
+    userId: $.response.module.userId
+  headers:
+    Content-Type: application/json
+    token: $.response.global.token
+  sql:
+    setup:
+      persist:
+        delete_01_audit_status_id: insert into audit_status (audit_status) values (%s) [(1)]
+        delete_01_post_id: INSERT INTO post (title, cover_image, summary, content, author_id, forum_id, audit_status_id, views, priority, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) [(Test Delete Title, ABC, Test Delete Summary, Test Delete Content, $.response.module.userId, 1, $.sql.setup.persist.delete_01_audit_status_id[0], 0, 0, 2025-01-16 12:00:00, 2025-01-16 12:00:00)];
 
-
-#post_delete_01:
-#  protocol: http
-#  host: 127.0.0.1
-#  api: /post/{$.sql.post_delete_01.}
-#  method: DelEte
-#  param:
-#  data:
-#  headers:
-#    Content-Type: application/json
 
 
 
