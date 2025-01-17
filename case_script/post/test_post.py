@@ -26,6 +26,6 @@ class TestPost:
         http_request = HttpRequest(api_test_case)
         http_request.setup_request()
         resp = http_request.send_request()
-        print(resp.text)
         http_request.teardown_request(resp)
+        Assertion(api_test_case).doAssert()
 

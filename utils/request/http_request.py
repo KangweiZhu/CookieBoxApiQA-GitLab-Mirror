@@ -29,7 +29,6 @@ class HttpRequest(BaseRequest):
                 'api': apitestcase.api
             }
         )
-        print("url: ", self.sanitize_data_fields(application_context, request_url))
         try:
             logging.info(f"Sending {apitestcase.method} request to {request_url}")
             resp = requests.request(

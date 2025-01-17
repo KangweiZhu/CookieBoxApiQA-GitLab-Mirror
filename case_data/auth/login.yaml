@@ -20,5 +20,21 @@ auth_login_01:
       module:
         userId: $.data.info.id
   description:
+  assertion:
+    assert_token_exist:
+      actual: $.response.global.token
+      expected:
+          type: not
+          value: null
+      error_message: "默认apitestcase.identifier: assertionKey(在这里是assert_token_exist)断言失败"
+      correct_message:
+
+    assert_tester_userId:
+      actual: $.response.module.userId
+      expected:
+        type: is
+        value: 15860
+      error_message: "默认apitestcase.identifier: assertionKey(在这里是assert_token_exist)断言失败"
+      correct_message:
 
 

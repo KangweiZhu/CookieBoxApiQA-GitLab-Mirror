@@ -125,6 +125,10 @@ class YamlUtil:
             sql = case_data.get('sql')
             return sql
 
+        def get_assertion(case_data) -> Optional[Dict[str, Dict[str, any]]]:
+            assertion = case_data.get('assertion')
+            return assertion
+
         summary = get_summary(raw_data)
         project = get_project(summary)
         module = get_module(summary)
@@ -152,7 +156,8 @@ class YamlUtil:
                         data=get_data(case_data),
                         context=get_context(case_data, **exception_message_fields),
                         description=get_description(case_data),
-                        sql=get_sql(case_data)
+                        sql=get_sql(case_data),
+                        assertion=get_assertion(case_data)
                     )
                     testcase_container[project][module][identifier] = testcase
                     identifier = key
