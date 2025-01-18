@@ -8,11 +8,11 @@
 ------------      -------------------   --------    -----------
 12/29/24 09:48    Anicaa (Kangwei Zhu)  1.0         None
 '''
-import json
 
 import pytest
 
 from modal.test_case import ApiTestCase
+from utils.assertion.assertion import Assertion
 from utils.case.gen_util import load_test_case, load_identifier
 from utils.request.http_request import HttpRequest
 
@@ -27,5 +27,5 @@ class TestPost:
         http_request.setup_request()
         resp = http_request.send_request()
         http_request.teardown_request(resp)
-        Assertion(api_test_case).doAssert()
+        Assertion(api_test_case).do_assert()
 

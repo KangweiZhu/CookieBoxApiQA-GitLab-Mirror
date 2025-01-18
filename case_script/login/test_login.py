@@ -11,9 +11,9 @@
 import json
 
 import pytest
-import mysql.connector
 
 from modal.test_case import ApiTestCase
+from utils.assertion.assertion import Assertion
 from utils.case.gen_util import load_test_case, load_identifier
 from utils.request.http_request import HttpRequest
 
@@ -28,4 +28,6 @@ class TestLogin:
         http_request.setup_request()
         resp = http_request.send_request()
         http_request.teardown_request(resp)
+        assertion = Assertion(api_test_case)
+        assertion.do_assert()
 

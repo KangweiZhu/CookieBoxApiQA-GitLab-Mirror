@@ -32,9 +32,9 @@ for yaml_file_entry in yaml_file_entries:
                     if module not in testcase_bus[project]:
                         testcase_bus[project][module] = identifiers
                     else:
-                        for identifier, apitestcase in identifiers.items():
+                        for identifier, testcase in identifiers.items():
                             if identifier not in testcase_bus[project][module]:
-                                testcase_bus[project][module][identifier] = apitestcase
+                                testcase_bus[project][module][identifier] = testcase
 
 testcase_bus_json = json.dumps(testcase_bus, indent=4, ensure_ascii=False, default=JsonUtil.default_serializer)
 # print(testcase_bus_json)
