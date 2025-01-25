@@ -24,8 +24,8 @@ class Assertion:
         self.assertion_funcs = load_module_func(assertion_func)
 
     @staticmethod
-    def error_message_formatter(apitestcase: ApiTestCase, assertionKey, actual, expected):
-        return f"{apitestcase.identifier}: {assertionKey} 断言失败。期望：{expected}, 实际: {actual}"
+    def error_message_formatter(apitestcase: ApiTestCase, assertionKey, actual, expect):
+        return f"{apitestcase.identifier}: {assertionKey} 断言失败。期望：{expect}, 实际: {actual}"
 
     @staticmethod
     def correct_message_formatter(apitestcase: ApiTestCase, assertionKey):
@@ -37,18 +37,18 @@ class Assertion:
         if assertion_dict:
             for assertion_key, assertion_attrs in assertion_dict.items():
                 actual = assertion_attrs.get('actual')
-                expected = assertion_attrs.get('expected')
-                if not actual or not expected:
+                expect = assertion_attrs.get('expect')
+                if not actual or not expect:
                     logging.warn("assertion为空")
                     return
-                expected_type = expected.get('type')
-                expected_value = expected.get('value')
+                expect_type = expect.get('type')
+                expect_value = expect.get('value')
                 actual = StringUtil.replace_jsonpath_in_string(application_context, actual, apitestcase.identifier)
-                expected_value = StringUtil.replace_jsonpath_in_string(application_context, expected_value, apitestcase.identifier)
+                expect_value = StringUtil.replace_jsonpath_in_string(application_context, expect_value, apitestcase.identifier)
                 error_message = assertion_attrs.get('error_message')
                 if not error_message:
-                    error_message = Assertion.error_message_formatter(apitestcase, assertion_key, actual, expected_value)
-                self.assertion_funcs[expected_type](actual, expected_value, error_message)
+                    error_message = Assertion.error_message_formatter(apitestcase, assertion_key, actual, expect_value)
+                self.assertion_funcs[expect_type](actual, expect_value, error_message)
 
 
 

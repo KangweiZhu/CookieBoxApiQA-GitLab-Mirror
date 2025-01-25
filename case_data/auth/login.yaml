@@ -23,14 +23,14 @@ auth_login_01:
   assertion:
     assert_token_exist:
       actual: $.response.global.token
-      expected:
+      expect:
           type: not_equals
           value:
       error_message:
 
     assert_tester_userId:
       actual: $.response.module.userId
-      expected:
+      expect:
         type: equals
         value: '15760'
       error_message:

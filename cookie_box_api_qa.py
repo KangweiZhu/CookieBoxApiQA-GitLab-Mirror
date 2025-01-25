@@ -18,7 +18,6 @@ from context.context import application_context
 def run():
     pytest.main()
 
-
 if __name__ == '__main__':
     cache = {}
     run()
